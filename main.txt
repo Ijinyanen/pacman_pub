@@ -1,0 +1,91 @@
+import pygame
+
+pygame.init()
+
+#constants
+BLUE = (0,0,255)
+RED = (255,0,0)
+GREEN = (0,255,0)
+BLACK = (0,0,0)
+WHITE = (255,255,255)
+PINK = (229,18,161)
+PURPLE = (255,0,255)
+YELLOW = (255,255,0)
+
+#set_startfor yellow circle
+x = 100
+y = 100
+width=20
+height=20
+vel=1
+direction = [0,0]
+
+#set screen
+screen_width=400
+screen_height=400
+surface = pygame.display.set_mode((screen_width, screen_height))
+surface.fill(BLACK)
+
+#collision detection function
+def col_dec(x_coor, y_coor, wall_width, wall_depth):
+    x_adjust = x_coor - width
+    y_adjust = y_coor - width
+    width_adjust = wall_width + 20 + x_coor
+    depth_adjust = wall_depth + 20 + y_coor
+    global x
+    global y
+    global direction
+
+    if x >= x_adjust and x <= width_adjust and y >= y_adjust and y <= depth_adjust:
+        direction = [0,0]
+        if x == x_adjust:
+            x = x_adjust -2
+        if x == width_adjust: 
+            x = width_adjust + 2
+        if y == y_adjust:
+            y = y_adjust -2
+        if y == depth_adjust:
+            y = depth_adjust +2
+           
+
+
+#game loop
+game_on= True
+while game_on:
+    pygame.time.delay(10)
+    surface.fill(BLACK)
+    pygame.draw.rect(surface, BLUE, pygame.Rect(0,0,400,19),)
+    pygame.draw.rect(surface, BLUE, pygame.Rect(0,0,19,400))
+    pygame.draw.rect(surface, BLUE, pygame.Rect(381,0,19,400))
+    pygame.draw.rect(surface, BLUE, pygame.Rect(0,381,400,19))
+
+    pygame.draw.rect(surface, BLUE, pygame.Rect((100,200, 200, 10)))
+
+
+    for event in pygame.event.get():
+        
+	#for exit
+	if event.type == pygame.QUIT:
+            game_on = False
+
+	#movements
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                direction = [-1,0]
+            if event.key == pygame.K_RIGHT:
+                direction = [1,0]
+            if event.key == pygame.K_UP:
+                direction = [0,-1]
+            if event.key == pygame.K_DOWN:
+                direction = [0,1]
+
+    #update character
+    x += direction[0]
+    y += direction[1]
+
+    #Collision detection via function
+    col_dec(100,200,200,10)
+
+    pygame.draw.circle(surface,YELLOW, (x,y),width)
+    pygame.display.update()
+
